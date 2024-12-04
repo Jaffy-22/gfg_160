@@ -1,0 +1,64 @@
+/*
+You are given two strings of equal lengths, s1 and s2. The task is to check if s2 is a rotated version of the string s1.
+Note: The characters in the strings are in lowercase.
+
+Examples :
+Input: s1 = "abcd", s2 = "cdab"
+Output: true
+Explanation: After 2 right rotations, s1 will become equal to s2.
+
+Input: s1 = "aab", s2 = "aba"
+Output: true
+Explanation: After 1 left rotation, s1 will become equal to s2.
+
+Input: s1 = "abcd", s2 = "acbd"
+Output: false
+Explanation: Strings are not rotations of each other.
+*/
+class Solution {
+    public static boolean areRotations(String s1, String s2) {
+        if (s1.length() != s2.length()) {
+            return false;
+        }     
+        String str = s1 + s1;
+        int n = s2.length(); 
+        int[] pi = new int[n]; 
+        piTable(pi, s2, n);  
+        int i = 0; 
+        int j = 0; 
+        while (i < str.length()) {
+            if (str.charAt(i) == s2.charAt(j)) {
+                i++;
+                j++;
+            }
+            if (j == n) {
+                return true; 
+            } else if (i < str.length() && str.charAt(i) != s2.charAt(j)) {
+                if (j != 0) {
+                    j = pi[j - 1];
+                } else {
+                    i++;
+                }
+            }
+        }
+        return false;
+    }
+    private static void piTable(int[] pi, String pat, int n) {
+        int prevLongSuffix = 0;
+        int i = 1;
+        while (i < n) {
+            if (pat.charAt(i) == pat.charAt(prevLongSuffix)) {
+                prevLongSuffix++;
+                pi[i] = prevLongSuffix;
+                i++;
+            } else {
+                if (prevLongSuffix != 0) {
+                    prevLongSuffix = pi[prevLongSuffix - 1];
+                } else {
+                    pi[i] = 0;
+                    i++;
+                }
+            }
+        }
+    }
+}
